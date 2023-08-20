@@ -1,6 +1,6 @@
 # XRPL Encoder
 
-`xrpl-encoder` is a tool for encoding and decoding JSON or HEX data specific to XRPL. Whether you have a single input, a file, or an entire directory of files, this tool streamlines the process.
+`xrpl-encoder` is a tool, written in Go, for encoding and decoding JSON or HEX data specific to XRPL. Whether you have a single input, a file, or an entire directory of files, this tool streamlines the process.
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
