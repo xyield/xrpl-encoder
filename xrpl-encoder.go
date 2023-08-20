@@ -53,7 +53,7 @@ func processBatch(directory string) {
 
 func displayHelp() {
 	fmt.Println(`
-Usage: XRPL Encoding Tool [OPTIONS]
+Usage: xrpl-encoder [OPTIONS]
 
 Options:
   -data   Directly provide HEX or JSON data as input.
@@ -275,7 +275,6 @@ func processInput(inputData string) {
 			fmt.Println("\nRe-encoded Tx Hex:\n", encoded)
 		}
 	}
-	// ... (rest of the processInput function)
 
 	if shouldSave, customName := askForFileOutput(); shouldSave {
 		writeOutputToFile(outputFileContent, customName)
