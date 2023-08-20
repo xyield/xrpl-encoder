@@ -36,7 +36,7 @@ If you run `xrpl-encoder` without any flags, it enters interactive mode. Here ar
 ./xrpl-encoder
 ```
 2. Select an option:
-```bash
+```
 WARNING: For very large data entries, you may overload your terminal when pasting with Direct Input (Option 1).
 Consider using the File Input method (Option 2) for large datasets.
 
