@@ -54,7 +54,7 @@ You can use the tool with the following command-line flags:
 
 - `-data`: Directly provide HEX or JSON data as input. ```./xrpl-encoder -data 120007220000000024...```
 - `-file`: Provide the path to a file containing HEX or JSON data.  ```./xrpl-encoder -file example.json```
-- `-batch`: Provide the path to a directory containing multiple HEX or JSON files. ```./xrpl-encoder -batch /examplefolder```
+- `-batch`: Provide the path to a directory with multiple files. ```./xrpl-encoder -batch /examplefolder```
 - `-help`: Show the help message.
 
 
