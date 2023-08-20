@@ -16,10 +16,10 @@ import (
 )
 
 var (
-	dataInput  = flag.String("data", "", "Directly provide HEX or JSON data as input.")
-	fileInput  = flag.String("file", "", "Provide the path to a file containing HEX or JSON data.")
-	helpFlag   = flag.Bool("help", false, "Show help message")
-	batchInput = flag.String("batch", "", "Provide the path to a directory containing multiple HEX or JSON files.")
+	dataInput  = flag.String("d", "", "Directly provide HEX or JSON data as input.")
+	fileInput  = flag.String("f", "", "Provide the path to a file containing HEX or JSON data.")
+	helpFlag   = flag.Bool("h", false, "Show help message")
+	batchInput = flag.String("b", "", "Provide the path to a directory containing multiple HEX or JSON files.")
 )
 
 func processBatch(directory string) {
@@ -38,13 +38,13 @@ func processBatch(directory string) {
 
 	for _, file := range files {
 		if !file.IsDir() {
-			fmt.Println("Processing file:", file.Name()) // Print the name of each file being processed
+			fmt.Println("Processing file:\n", file.Name())
 
 			filePath := filepath.Join(directory, file.Name())
 			content, err := os.ReadFile(filePath)
 			if err != nil {
 				fmt.Println("Error reading file:", err)
-				continue // changed from return to continue, so that one file error doesn't stop the whole batch
+				continue
 			}
 			processInput(string(content))
 		}
@@ -56,9 +56,10 @@ func displayHelp() {
 Usage: xrpl-encoder [OPTIONS]
 
 Options:
-  -data   Directly provide HEX or JSON data as input.
-  -file   Provide the path to a file containing HEX or JSON data.
-  -batch  Provide the path to a directory containing multiple HEX or JSON files.
+  -d   Directly provide HEX or JSON data as input.
+  -f   Provide the path to a file containing HEX or JSON data.
+  -b  Provide the path to a directory containing multiple HEX or JSON files.
+  -h   Show help message
 
 To use the tool in interactive mode, just run it without any flags.
     `)
@@ -139,7 +140,7 @@ func handleChoice(choice int) {
 	switch choice {
 	case 1:
 		// Direct Input logic
-		fmt.Println("\nPlease paste your JSON or HEX data and press Enter twice:", "\n\nInput Data:\n") //nolint
+		fmt.Println("\nPlease paste your JSON or HEX data and press Enter twice:", "\n\nInput Data:\n")
 		inputData := readMultiLineInput()
 		processInput(inputData)
 		pauseAndReturnToMenu()

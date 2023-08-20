@@ -45,17 +45,17 @@ Choose input method:
 1. Direct Input
 2. File Input
 3. Batch Processing (Directory Input)
-4. Display Help
+4. Help
 5. Exit
 ```
 ### Command Line Flags
 
 You can use the tool with the following command-line flags:
 
-- `-data`: Directly provide HEX or JSON data as input. ```./xrpl-encoder -data 120007220000000024...```
-- `-file`: Provide the path to a file containing HEX or JSON data.  ```./xrpl-encoder -file example.json```
-- `-batch`: Provide the path to a directory with multiple files. ```./xrpl-encoder -batch /examplefolder```
-- `-help`: Show the help message.
+- `-d`: Directly provide HEX or JSON data as input. ```./xrpl-encoder -d 120007220000000024...```
+- `-f`: Provide the path to a file containing HEX or JSON data.  ```./xrpl-encoder -f example.json```
+- `-b`: Provide the path to a directory with multiple files. ```./xrpl-encoder -b /examplefolder```
+- `-h`: Show the help message. ```./xrpl-encoder -h```
 
 
 
