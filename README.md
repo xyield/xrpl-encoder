@@ -20,7 +20,7 @@
 - ### Dependencies
   This tool relies on the [`github.com/xyield/xrpl-go/binary-codec`](https://github.com/xyield/xrpl-go/binary-codec) package.
   
-  However, you don't need to manually install it. Go will handle the dependencies for you thanks to the `go.mod` file in the repository.
+  However, Go will handle the dependencies for you thanks to the `go.mod` file in the repository.
 
 ## Installation
 
