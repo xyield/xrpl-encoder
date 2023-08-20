@@ -67,4 +67,4 @@ The tool processes your input and provides either the encoded HEX or decoded JSO
 Your contributions are always welcome! Please feel free to submit pull requests, open issues, or provide feedback.
 
 ## License
-This project is licensed under the MIT License. See LICENSE for more details.
+This project is licensed under the MIT License. See [LICENSE](https://github.com/xyield/xrpl-encoder/LICENSE.txt) for more details.
