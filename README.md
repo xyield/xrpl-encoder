@@ -27,15 +27,6 @@ go build
 ```
 ## Usage
 
-### Command Line Flags
-
-You can use the tool with the following command-line flags:
-
-- `-data`: Directly provide HEX or JSON data as input.
-- `-file`: Provide the path to a file containing HEX or JSON data.
-- `-batch`: Provide the path to a directory containing multiple HEX or JSON files.
-- `-help`: Show the help message.
-
 ### Interactive Mode
 
 If you run `xrpl-encoder` without any flags, it enters interactive mode. Here are the steps:
@@ -44,6 +35,29 @@ If you run `xrpl-encoder` without any flags, it enters interactive mode. Here ar
 ```bash
 ./xrpl-encoder
 ```
+2. Select an option:
+```bash
+WARNING: For very large data entries, you may overload your terminal when pasting with Direct Input (Option 1).
+Consider using the File Input method (Option 2) for large datasets.
+
+Choose input method:
+
+1. Direct Input
+2. File Input
+3. Batch Processing (Directory Input)
+4. Display Help
+5. Exit
+```
+### Command Line Flags
+
+You can use the tool with the following command-line flags:
+
+- `-data`: Directly provide HEX or JSON data as input. ```./xrpl-encoder -data 120007220000000024...```
+- `-file`: Provide the path to a file containing HEX or JSON data.  ```./xrpl-encoder -file example.json```
+- `-batch`: Provide the path to a directory containing multiple HEX or JSON files. ```./xrpl-encoder -batch /examplefolder```
+- `-help`: Show the help message.
+
+
 
 ## Output
 The tool processes your input and provides either the encoded HEX or decoded JSON output. After processing, it offers you an option to save the output to a file. If you choose to save, it will either use a default naming scheme or a custom name you provide.
