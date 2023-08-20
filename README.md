@@ -14,7 +14,7 @@
 
 ## Prerequisites
 
-Make sure you have Go installed on your system. Also, this tool relies on the [`github.com/xyield/xrpl-go/binary-codec`](https://github.com/xyield/xrpl-go/binary-codec) package, so ensure you have this dependency set up.
+Make sure you have Go installed. Also, this tool relies on the [`github.com/xyield/xrpl-go/binary-codec`](https://github.com/xyield/xrpl-go/binary-codec) package, so ensure you have this dependency set up.
 
 ## Installation
 
