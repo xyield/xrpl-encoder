@@ -284,8 +284,8 @@ func processInput(inputData string) {
 
 func readMultiLineInput() string {
 	scanner := bufio.NewScanner(os.Stdin)
-	const maxCapacity = 10 * 1024 * 1024 // 10MB
-	buf := make([]byte, maxCapacity)     // directly allocate 10MB
+	const maxCapacity = 10 * 1024 * 1024
+	buf := make([]byte, maxCapacity)
 	scanner.Buffer(buf, maxCapacity)
 
 	var lines []string
