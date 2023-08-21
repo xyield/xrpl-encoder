@@ -72,15 +72,19 @@ func main() {
 }
 
 func displayMenu() int {
-	fmt.Println("\nWARNING: For very large data entries, you may overload your terminal when pasting with Direct Input (Option 1).")
-	fmt.Println("Consider using the File Input method (Option 2) for large datasets.")
-	fmt.Print("\nChoose input method:\n\n")
-	fmt.Println("1. Direct Input")
-	fmt.Println("2. File Input")
-	fmt.Println("3. Batch Processing (Directory Input)")
-	fmt.Println("4. Display Help")
-	fmt.Print("5. Exit\n\n")
+	fmt.Print(`
+WARNING: For very large data entries, you may overload your terminal when pasting with Direct Input (Option 1).
+Consider using the File Input method (Option 2) for large datasets.
+	
+Choose input method:
+	
+1. Direct Input
+2. File Input
+3. Batch Processing (Directory Input)
+4. Display Help
+5. Exit
 
+`)
 	var choice int
 	fmt.Scanln(&choice)
 
