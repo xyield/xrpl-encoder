@@ -22,49 +22,6 @@ var (
 	batchInput = flag.String("b", "", "Provide the path to a directory containing multiple HEX or JSON files.")
 )
 
-func processBatch(directory string) {
-	fmt.Println("Processing directory:", directory)
-
-	files, err := os.ReadDir(directory)
-	if err != nil {
-		fmt.Println("Error reading directory:", err)
-		return
-	}
-
-	if len(files) == 0 {
-		fmt.Println("No files found in the directory.")
-		return
-	}
-
-	for _, file := range files {
-		if !file.IsDir() {
-			fmt.Println("Processing file:\n", file.Name())
-
-			filePath := filepath.Join(directory, file.Name())
-			content, err := os.ReadFile(filePath)
-			if err != nil {
-				fmt.Println("Error reading file:", err)
-				continue
-			}
-			processInput(string(content))
-		}
-	}
-}
-
-func displayHelp() {
-	fmt.Println(`
-Usage: xrpl-encoder [OPTIONS]
-
-Options:
-  -d   Directly provide HEX or JSON data as input.
-  -f   Provide the path to a file containing HEX or JSON data.
-  -b  Provide the path to a directory containing multiple HEX or JSON files.
-  -h   Show help message
-
-To use the tool in interactive mode, just run it without any flags.
-    `)
-}
-
 func main() {
 	flag.Parse()
 
@@ -117,12 +74,12 @@ func main() {
 func displayMenu() int {
 	fmt.Println("\nWARNING: For very large data entries, you may overload your terminal when pasting with Direct Input (Option 1).")
 	fmt.Println("Consider using the File Input method (Option 2) for large datasets.")
-	fmt.Println("\nChoose input method:\n")
+	fmt.Print("\nChoose input method:\n\n")
 	fmt.Println("1. Direct Input")
 	fmt.Println("2. File Input")
 	fmt.Println("3. Batch Processing (Directory Input)")
 	fmt.Println("4. Display Help")
-	fmt.Println("5. Exit")
+	fmt.Print("5. Exit\n\n")
 
 	var choice int
 	fmt.Scanln(&choice)
@@ -130,17 +87,11 @@ func displayMenu() int {
 	return choice
 }
 
-func pauseAndReturnToMenu() {
-	fmt.Println("\nPress Enter to return to the main menu.")
-	reader := bufio.NewReader(os.Stdin)
-	reader.ReadString('\n')
-}
-
 func handleChoice(choice int) {
 	switch choice {
 	case 1:
 		// Direct Input logic
-		fmt.Println("\nPlease paste your JSON or HEX data and press Enter twice:", "\n\nInput Data:\n")
+		fmt.Print("\n\nPlease paste your JSON or HEX data and press Enter twice:", "\n\nInput Data:\n")
 		inputData := readMultiLineInput()
 		processInput(inputData)
 		pauseAndReturnToMenu()
@@ -173,7 +124,6 @@ func handleChoice(choice int) {
 }
 
 func processInput(inputData string) {
-	// Trim the data
 	inputData = strings.TrimSpace(inputData)
 
 	if len(inputData) == 0 {
@@ -181,7 +131,6 @@ func processInput(inputData string) {
 		return
 	}
 
-	// Check if the data is surrounded by quotes or backticks and trim them
 	firstChar := inputData[0:1]
 	lastChar := inputData[len(inputData)-1:]
 
@@ -198,15 +147,14 @@ func processInput(inputData string) {
 
 	_, err := hex.DecodeString(inputData)
 	if err != nil {
-		var jsonInput map[string]interface{}
+		var jsonInput map[string]any
 		err := json.Unmarshal([]byte(inputData), &jsonInput)
 		if err != nil {
 			fmt.Println("error:", err)
 			return
 		}
 
-		// Process the JSON fields to convert them to the correct types for encoding (e.g. int64 to int)
-		jsonInput = processJSONFields(jsonInput).(map[string]interface{})
+		jsonInput = processJSONFields(jsonInput).(map[string]any)
 
 		encoded, err := binarycodec.Encode(jsonInput)
 		if err != nil {
@@ -215,7 +163,7 @@ func processInput(inputData string) {
 		}
 
 		fmt.Println("\nEncoded Tx Hex:\n\n", encoded)
-		outputFileContent = encoded // Save the encoded hex for output
+		outputFileContent = encoded
 
 		decoded, err := binarycodec.Decode(encoded)
 		if err != nil {
@@ -232,8 +180,8 @@ func processInput(inputData string) {
 		fmt.Println("\n\nChecking if Re-decoded Tx Hex matches the original Tx JSON...")
 		time.Sleep(1 * time.Second)
 
-		var original map[string]interface{}
-		var reDecoded map[string]interface{}
+		var original map[string]any
+		var reDecoded map[string]any
 		json.Unmarshal([]byte(inputData), &original)
 		json.Unmarshal(jsonOutput, &reDecoded)
 
@@ -258,7 +206,7 @@ func processInput(inputData string) {
 		}
 
 		fmt.Println("\nDecoded Tx Json:\n\n", string(jsonOutput))
-		outputFileContent = string(jsonOutput) // Save the decoded JSON for output
+		outputFileContent = string(jsonOutput)
 
 		encoded, err := binarycodec.Encode(decoded)
 		if err != nil {
@@ -283,6 +231,49 @@ func processInput(inputData string) {
 
 }
 
+func processBatch(directory string) {
+	fmt.Println("Processing directory:", directory)
+
+	files, err := os.ReadDir(directory)
+	if err != nil {
+		fmt.Println("Error reading directory:", err)
+		return
+	}
+
+	if len(files) == 0 {
+		fmt.Println("No files found in the directory.")
+		return
+	}
+
+	for _, file := range files {
+		if !file.IsDir() {
+			fmt.Println("Processing file:\n", file.Name())
+
+			filePath := filepath.Join(directory, file.Name())
+			content, err := os.ReadFile(filePath)
+			if err != nil {
+				fmt.Println("Error reading file:", err)
+				continue
+			}
+			processInput(string(content))
+		}
+	}
+}
+
+func displayHelp() {
+	fmt.Println(`
+Usage: xrpl-encoder [OPTIONS]
+
+Options:
+  -d   Directly provide HEX or JSON data as input.
+  -f   Provide the path to a file containing HEX or JSON data.
+  -b  Provide the path to a directory containing multiple HEX or JSON files.
+  -h   Show help message
+
+To use the tool in interactive mode, just run it without any flags.
+    `)
+}
+
 func readMultiLineInput() string {
 	scanner := bufio.NewScanner(os.Stdin)
 	const maxCapacity = 10 * 1024 * 1024
@@ -305,24 +296,27 @@ func readMultiLineInput() string {
 	return strings.Join(lines, "\n")
 }
 
-func processJSONFields(input interface{}) interface{} {
+func pauseAndReturnToMenu() {
+	fmt.Println("\nPress Enter to return to the main menu.")
+	reader := bufio.NewReader(os.Stdin)
+	reader.ReadString('\n')
+}
+
+func processJSONFields(input any) any {
 	switch v := input.(type) {
 	case float64:
 		return int(v)
-	case map[string]interface{}:
+	case map[string]any:
 		for key, value := range v {
-			// Check if the key matches one of the target field names
 			if key == "Indexes" || key == "Hashes" || key == "Amendments" || key == "Nftokenoffers" {
-				// Attempt to convert the value to []interface{}
-				if list, ok := value.([]interface{}); ok {
+				if list, ok := value.([]any); ok {
 					v[key] = convertInterfaceSliceToStringSlice(list)
 				}
 			} else {
-				// Continue processing nested values
 				v[key] = processJSONFields(value)
 			}
 		}
-	case []interface{}:
+	case []any:
 		for i, value := range v {
 			v[i] = processJSONFields(value)
 		}
@@ -330,7 +324,7 @@ func processJSONFields(input interface{}) interface{} {
 	return input
 }
 
-func convertInterfaceSliceToStringSlice(slice []interface{}) []string {
+func convertInterfaceSliceToStringSlice(slice []any) []string {
 	var stringSlice []string
 	for _, val := range slice {
 		strVal, ok := val.(string)
@@ -344,13 +338,11 @@ func convertInterfaceSliceToStringSlice(slice []interface{}) []string {
 func writeOutputToFile(output, customName string) {
 	filename := customName
 
-	// Determine the file extension: .json for JSON content and .txt for others
 	extension := ".txt"
 	if isJSON(output) {
 		extension = ".json"
 	}
 
-	// If the user hasn't provided a custom filename, use the default naming logic
 	if filename == "output" {
 		i := 1
 		for fileExists(filename + extension) {
@@ -358,7 +350,6 @@ func writeOutputToFile(output, customName string) {
 			i++
 		}
 	} else if fileExists(filename + extension) {
-		// If the custom name exists, append a number to it until we find an available filename
 		i := 1
 		for fileExists(filename + fmt.Sprintf("_%d", i) + extension) {
 			i++
@@ -366,7 +357,6 @@ func writeOutputToFile(output, customName string) {
 		filename = filename + fmt.Sprintf("_%d", i)
 	}
 
-	// Create the file with the determined name
 	filename = filename + extension
 	err := os.WriteFile(filename, []byte(output), 0644)
 	if err != nil {
