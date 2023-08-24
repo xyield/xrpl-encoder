@@ -13,6 +13,7 @@ import (
 	"time"
 
 	binarycodec "github.com/xyield/xrpl-go/binary-codec"
+	"github.com/xyield/xrpl-go/binary-codec/definitions"
 )
 
 var (
@@ -189,7 +190,7 @@ func processInput(inputData string) {
 		json.Unmarshal([]byte(inputData), &original)
 		json.Unmarshal(jsonOutput, &reDecoded)
 
-		if reflect.DeepEqual(original, reDecoded) {
+		if reflect.DeepEqual(standardizeHexStrings(original), standardizeHexStrings(reDecoded)) {
 			fmt.Println("\nSUCCESS ---> Re-decoded Tx JSON matches the original Tx JSON")
 		} else {
 			fmt.Println("\nFAIL ---> Re-decoded Tx Hex does not match original Tx JSON\nNote: Some fields in the raw JSON won't be encoded because they don't exist in the binary-codec definitions.json, or they are supposed to be omitted from the binary encoding. This is expected behavior.")
@@ -397,4 +398,48 @@ func askForFileOutput() (bool, string) {
 func isJSON(str string) bool {
 	var js json.RawMessage
 	return json.Unmarshal([]byte(str), &js) == nil
+}
+
+func standardizeHexStrings(i any) any {
+	switch v := i.(type) {
+	case map[string]any:
+		for key, value := range v {
+			if isUInt64Field(key) {
+				v[key] = standardizeUInt64(value.(string))
+				v[key] = standardizeHexStrings(v[key])
+			} else {
+				v[key] = standardizeHexStrings(value)
+			}
+		}
+	case []any:
+		for index, value := range v {
+			v[index] = standardizeHexStrings(value)
+		}
+	case string:
+		if looksLikeHex(v) {
+			return strings.ToUpper(v)
+		}
+	}
+	return i
+}
+
+func looksLikeHex(s string) bool {
+	if len(s) < 2 {
+		return false
+	}
+	for _, c := range s {
+		if (c < '0' || c > '9') && (c < 'a' || c > 'f') && (c < 'A' || c > 'F') {
+			return false
+		}
+	}
+	return true
+}
+
+func isUInt64Field(fieldName string) bool {
+	typeName, _ := definitions.Get().GetTypeNameByFieldName(fieldName)
+	return typeName == "UInt64"
+}
+
+func standardizeUInt64(value string) string {
+	return fmt.Sprintf("%016s", value)
 }
