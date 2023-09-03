@@ -187,8 +187,17 @@ func processInput(inputData string) {
 
 		var original map[string]any
 		var reDecoded map[string]any
-		json.Unmarshal([]byte(inputData), &original)
-		json.Unmarshal(jsonOutput, &reDecoded)
+		err = json.Unmarshal([]byte(inputData), &original)
+		if err != nil {
+			fmt.Println("error:", err)
+			return
+		}
+
+		err = json.Unmarshal(jsonOutput, &reDecoded)
+		if err != nil {
+			fmt.Println("error:", err)
+			return
+		}
 
 		if reflect.DeepEqual(standardizeHexStrings(original), standardizeHexStrings(reDecoded)) {
 			fmt.Println("\nSUCCESS ---> Re-decoded Tx JSON matches the original Tx JSON")
@@ -304,7 +313,10 @@ func readMultiLineInput() string {
 func pauseAndReturnToMenu() {
 	fmt.Println("\nPress Enter to return to the main menu.")
 	reader := bufio.NewReader(os.Stdin)
-	reader.ReadString('\n')
+	_, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println("Error reading from input:", err)
+	}
 }
 
 func processJSONFields(input any) any {
