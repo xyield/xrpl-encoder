@@ -114,6 +114,20 @@ func handleChoice(choice int) {
 			fmt.Println("Error reading file path:", err)
 			return
 		}
+
+		// Validate the file path
+		if strings.Contains(filePath, "..") {
+			fmt.Println("Invalid file path detected:", filePath)
+			return
+		}
+
+		// Ensure the filePath starts with a known directory
+		baseDirectory := "process"
+		if !strings.HasPrefix(filePath, baseDirectory) {
+			fmt.Println("Invalid directory path.")
+			return
+		}
+
 		content, err := os.ReadFile(filePath)
 		if err != nil {
 			fmt.Println("Error reading file:", err)
@@ -260,6 +274,11 @@ func processInput(inputData string) {
 func processBatch(directory string) {
 	fmt.Println("Processing directory:", directory)
 
+	if !strings.HasPrefix(directory, "process") {
+		fmt.Println("Invalid directory path.")
+		return
+	}
+
 	files, err := os.ReadDir(directory)
 	if err != nil {
 		fmt.Println("Error reading directory:", err)
@@ -273,10 +292,15 @@ func processBatch(directory string) {
 
 	for _, file := range files {
 		if !file.IsDir() {
-			fmt.Println("Processing file:\n", file.Name())
 
+			if strings.Contains(file.Name(), "..") {
+				fmt.Println("Invalid file path detected:", file.Name())
+				continue
+			}
+
+			fmt.Println("Processing file:", file.Name())
 			filePath := filepath.Join(directory, file.Name())
-			content, err := os.ReadFile(filePath) // nolint: gosec
+			content, err := os.ReadFile(filePath)
 			if err != nil {
 				fmt.Println("Error reading file:", err)
 				continue
