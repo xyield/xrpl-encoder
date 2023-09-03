@@ -87,7 +87,11 @@ Choose input method:
 
 `)
 	var choice int
-	fmt.Scanln(&choice)
+	_, err := fmt.Scanln(&choice)
+	if err != nil {
+		fmt.Println("Error reading choice:", err)
+		return 0
+	}
 
 	return choice
 }
@@ -105,7 +109,11 @@ func handleChoice(choice int) {
 		// File Input logic
 		fmt.Println("\nEnter the path to your input file:")
 		var filePath string
-		fmt.Scanln(&filePath)
+		_, err := fmt.Scanln(&filePath)
+		if err != nil {
+			fmt.Println("Error reading file path:", err)
+			return
+		}
 		content, err := os.ReadFile(filePath)
 		if err != nil {
 			fmt.Println("Error reading file:", err)
@@ -118,7 +126,11 @@ func handleChoice(choice int) {
 		// Batch Processing logic
 		fmt.Println("Please provide the directory path for batch processing:")
 		var dirPath string
-		fmt.Scanln(&dirPath)
+		_, err := fmt.Scanln(&dirPath)
+		if err != nil {
+			fmt.Println("Error reading directory path:", err)
+			return
+		}
 		processBatch(dirPath)
 		pauseAndReturnToMenu()
 
@@ -264,7 +276,7 @@ func processBatch(directory string) {
 			fmt.Println("Processing file:\n", file.Name())
 
 			filePath := filepath.Join(directory, file.Name())
-			content, err := os.ReadFile(filePath)
+			content, err := os.ReadFile(filePath) // nolint: gosec
 			if err != nil {
 				fmt.Println("Error reading file:", err)
 				continue
@@ -375,7 +387,7 @@ func writeOutputToFile(output, customName string) {
 	}
 
 	filename = filename + extension
-	err := os.WriteFile(filename, []byte(output), 0644)
+	err := os.WriteFile(filename, []byte(output), 0600)
 	if err != nil {
 		fmt.Println("Error writing to file:", err)
 		return
