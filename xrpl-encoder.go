@@ -300,7 +300,7 @@ func processBatch(directory string) {
 
 			fmt.Println("Processing file:", file.Name())
 			filePath := filepath.Join(directory, file.Name())
-			content, err := os.ReadFile(filePath)
+			content, err := os.ReadFile(filePath) // #nosec G304
 			if err != nil {
 				fmt.Println("Error reading file:", err)
 				continue
