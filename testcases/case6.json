@@ -1,0 +1,22 @@
+{
+    "FinalFields": {
+        "AffectedNodes": [
+            {
+                "DeletedNode": {
+                    "Template": [
+                        {
+                            "PreviousFields": {
+                                "ExchangeRate": "4A0745621D069432"
+                            }
+                        },
+                        {
+                            "FinalFields": {
+                                "ExchangeRate": "4A0745621D069432"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
