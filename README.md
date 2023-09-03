@@ -1,8 +1,8 @@
-# XRPL Encoder
-
 ![Go Report Card](https://goreportcard.com/badge/github.com/xyield/xrpl-go)
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/xyield/xrpl-encoder)
 ![GitHub](https://img.shields.io/github/license/xyield/xrpl-go)
+# XRPL Encoder
+
 
 `xrpl-encoder` is a tool, written in Go, for encoding and decoding JSON or HEX data specific to XRP Ledger transactions. Whether you have a single input, a file, or an entire directory of files, this tool streamlines the process.
 
