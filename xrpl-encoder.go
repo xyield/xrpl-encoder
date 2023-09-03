@@ -128,7 +128,7 @@ func handleChoice(choice int) {
 			return
 		}
 
-		content, err := os.ReadFile(filePath)
+		content, err := os.ReadFile(filePath) // #nosec G304
 		if err != nil {
 			fmt.Println("Error reading file:", err)
 			return
