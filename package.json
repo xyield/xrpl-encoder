@@ -1,0 +1,26 @@
+{
+    "name": "xrpl-encoder",
+    "version": "1.0.0",
+    "description": "A utility for encoding and decoding data related to the XRPL (XRP Ledger).",
+    "main": "xrpl-encoder.go",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/xyield/xrpl-encoder.git"
+    },
+    "keywords": [
+      "xrpl",
+      "encoder",
+      "decoder",
+      "xrp",
+      "ledger"
+    ],
+    "author": "xYield",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/xyield/xrpl-encoder/issues"
+    },
+    "homepage": "https://github.com/xyield/xrpl-encoder#readme",
+    "dependencies": {},
+    "devDependencies": {}
+  }
+  
