@@ -1,0 +1,21 @@
+{
+  "Account": "rf65k43DPAqnw6caEvZPPW4rpaVCeabGEM",
+  "Amount": {
+    "currency": "LUC",
+    "issuer": "rsygE5ynt2iSasscfCCeqaGBGiFKMCAUu7",
+    "value": "19015"
+  },
+  "Destination": "rMLUc76TXkGoMyXTLe7Re6jZwfZuuhGQkb",
+  "Fee": "12",
+  "Flags": 2147483648,
+  "LastLedgerSequence": 82230031,
+  "SendMax": {
+    "currency": "LUC",
+    "issuer": "rsygE5ynt2iSasscfCCeqaGBGiFKMCAUu7",
+    "value": "19015"
+  },
+  "Sequence": 76364408,
+  "SigningPubKey": "ED3F055999EEB6B54E8DD55BE722D809EB17AA46546CEBA69DDA5BAC864EEC5CED",
+  "TransactionType": "Payment",
+  "TxnSignature": "EDD2C89433B1027B139CD6BCE6F24417C0048EF89485562B87FEBB9B748E034F58AC8AB83662411C43F51332CCCA7306FCC60A72C1A2EBB6FEC1E90B1B75C30E"
+}

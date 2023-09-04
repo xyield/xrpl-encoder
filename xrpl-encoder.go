@@ -18,9 +18,9 @@ import (
 
 var (
 	dataInput  = flag.String("d", "", "Directly provide HEX or JSON data as input.")
-	fileInput  = flag.String("f", "", "Provide the path to a file containing HEX or JSON data.")
+	fileInput  = flag.String("f", "", "Provide the path to a file (stored in the 'process/' directory) containing HEX or JSON data.")
 	helpFlag   = flag.Bool("h", false, "Show help message")
-	batchInput = flag.String("b", "", "Provide the path to a directory containing multiple HEX or JSON files.")
+	batchInput = flag.Bool("b", false, "Provide the path to a subdirectory of 'process/' containing multiple HEX or JSON files.\nIf no subdirectory is provided, all files in the 'process/' directory will be processed.")
 )
 
 func main() {
@@ -50,8 +50,13 @@ func main() {
 	}
 
 	// Check if batch input flag is provided
-	if *batchInput != "" {
-		processBatch(*batchInput)
+	if *batchInput {
+		// Check if there's a next argument and it's not another flag
+		if len(os.Args) > 2 && !strings.HasPrefix(os.Args[2], "-") {
+			processBatch(os.Args[2])
+		} else {
+			processBatch("")
+		}
 		return
 	}
 
@@ -107,27 +112,15 @@ func handleChoice(choice int) {
 
 	case 2:
 		// File Input logic
-		fmt.Println("\nEnter the path to your input file:")
-		var filePath string
-		_, err := fmt.Scanln(&filePath)
+		fmt.Println("\nEnter the name of your input file (stored in the 'process/' directory):")
+		var fileName string
+		_, err := fmt.Scanln(&fileName)
 		if err != nil {
-			fmt.Println("Error reading file path:", err)
+			fmt.Println("Error reading file name:", err)
 			return
 		}
 
-		// Validate the file path
-		if strings.Contains(filePath, "..") {
-			fmt.Println("Invalid file path detected:", filePath)
-			return
-		}
-
-		// Ensure the filePath starts with a known directory
-		baseDirectory := "process"
-		if !strings.HasPrefix(filePath, baseDirectory) {
-			fmt.Println("Invalid directory path.")
-			return
-		}
-
+		filePath := filepath.Join("process", fileName)
 		content, err := os.ReadFile(filePath) // #nosec G304
 		if err != nil {
 			fmt.Println("Error reading file:", err)
@@ -138,13 +131,17 @@ func handleChoice(choice int) {
 
 	case 3:
 		// Batch Processing logic
-		fmt.Println("Please provide the directory path for batch processing:")
-		var dirPath string
-		_, err := fmt.Scanln(&dirPath)
+		fmt.Println("Please enter the name of the folder (in the 'process/' directory) containing the files you want to process")
+		fmt.Println("or press Enter to process files in the 'process/' directory:")
+
+		reader := bufio.NewReader(os.Stdin)
+		dirPath, err := reader.ReadString('\n')
 		if err != nil {
 			fmt.Println("Error reading directory path:", err)
 			return
 		}
+		dirPath = strings.TrimSpace(dirPath)
+
 		processBatch(dirPath)
 		pauseAndReturnToMenu()
 
@@ -271,13 +268,14 @@ func processInput(inputData string) {
 
 }
 
-func processBatch(directory string) {
-	fmt.Println("Processing directory:", directory)
-
-	if !strings.HasPrefix(directory, "process") {
-		fmt.Println("Invalid directory path.")
-		return
+func processBatch(subDir string) {
+	directory := "process"
+	if subDir != "" {
+		directory = filepath.Join(directory, subDir)
 	}
+
+	fmt.Println("\nProcessing directory:", directory)
+	fmt.Println("--------------------------------------------------------------------")
 
 	files, err := os.ReadDir(directory)
 	if err != nil {
@@ -292,12 +290,6 @@ func processBatch(directory string) {
 
 	for _, file := range files {
 		if !file.IsDir() {
-
-			if strings.Contains(file.Name(), "..") {
-				fmt.Println("Invalid file path detected:", file.Name())
-				continue
-			}
-
 			fmt.Println("Processing file:", file.Name())
 			filePath := filepath.Join(directory, file.Name())
 			content, err := os.ReadFile(filePath) // #nosec G304
@@ -316,8 +308,9 @@ Usage: xrpl-encoder [OPTIONS]
 
 Options:
   -d   Directly provide HEX or JSON data as input.
-  -f   Provide the path to a file containing HEX or JSON data.
-  -b  Provide the path to a directory containing multiple HEX or JSON files.
+  -f   Provide the path to a file (stored in the 'process/' directory) containing HEX or JSON data.
+  -b   Provide the path to a subdirectory of 'process/' containing multiple HEX or JSON files.
+       If no subdirectory is provided, files in the 'process/' directory will be processed.
   -h   Show help message
 
 To use the tool in interactive mode, just run it without any flags.
@@ -389,6 +382,9 @@ func convertInterfaceSliceToStringSlice(slice []any) []string {
 }
 
 func writeOutputToFile(output, customName string) {
+
+	os.MkdirAll("process/outputs", 0755)
+
 	filename := customName
 
 	extension := ".txt"
@@ -398,26 +394,27 @@ func writeOutputToFile(output, customName string) {
 
 	if filename == "output" {
 		i := 1
-		for fileExists(filename + extension) {
+		for fileExists(filepath.Join("process/outputs", filename+extension)) {
 			filename = fmt.Sprintf("output%d", i)
 			i++
 		}
-	} else if fileExists(filename + extension) {
+	} else if fileExists(filepath.Join("process/outputs", filename+extension)) {
 		i := 1
-		for fileExists(filename + fmt.Sprintf("_%d", i) + extension) {
+		for fileExists(filepath.Join("process/outputs", filename+fmt.Sprintf("_%d", i)+extension)) {
 			i++
 		}
 		filename = filename + fmt.Sprintf("_%d", i)
 	}
 
-	filename = filename + extension
+	filename = filepath.Join("process/outputs", filename+extension)
 	err := os.WriteFile(filename, []byte(output), 0600)
 	if err != nil {
 		fmt.Println("Error writing to file:", err)
 		return
 	}
 
-	fmt.Println("Output saved to", filename)
+	fmt.Println("\nOutput saved to", filename)
+	fmt.Println("\n--------------------------------------------------------------------")
 }
 
 func fileExists(filename string) bool {
@@ -432,6 +429,7 @@ func askForFileOutput() (bool, string) {
 	answer = strings.TrimSpace(answer)
 
 	if strings.ToLower(answer) == "n" {
+		fmt.Println("\n--------------------------------------------------------------------")
 		return false, ""
 	}
 
