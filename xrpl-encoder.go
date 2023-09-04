@@ -383,7 +383,11 @@ func convertInterfaceSliceToStringSlice(slice []any) []string {
 
 func writeOutputToFile(output, customName string) {
 
-	os.MkdirAll("process/outputs", 0755)
+	err := os.MkdirAll("process/outputs", 0750)
+	if err != nil {
+		fmt.Println("Error creating outputs directory:", err)
+		return
+	}
 
 	filename := customName
 
@@ -407,7 +411,7 @@ func writeOutputToFile(output, customName string) {
 	}
 
 	filename = filepath.Join("process/outputs", filename+extension)
-	err := os.WriteFile(filename, []byte(output), 0600)
+	err = os.WriteFile(filename, []byte(output), 0600)
 	if err != nil {
 		fmt.Println("Error writing to file:", err)
 		return
