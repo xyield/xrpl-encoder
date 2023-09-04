@@ -62,8 +62,13 @@ Choose input method:
 5. Exit
 ```
 For both the File Input and Batch Processing options, you don't need to prepend your input with `process/`.
-The tool automatically checks within this directory. For instance, if you have a file named example.json in the `process/` directory, 
-you should enter `example.json` when prompted. Or if you have a folder with the path `process/examples/`, you should enter `examples`.
+The tool automatically checks within this directory. 
+
+For instance, if you have a file named example.json in the `process/` directory, 
+you should enter `example.json` when prompted. 
+
+If you have a folder with the path `process/examples/`, you should enter `examples`.
+If you just want to process all files within the root of the `process/` directory, provide no argument.
 
 ### Command Line Flags
 
@@ -72,6 +77,7 @@ You can use the tool with the following command-line flags:
 - `-d`: Directly provide HEX or JSON data as input. ```./xrpl-encoder -d 120007220000000024...```
 - `-f`: Provide the path to a file containing HEX or JSON data.  ```./xrpl-encoder -f example.json```
 - `-b`: Provide the path to a directory with multiple files. ```./xrpl-encoder -b examples```
+- `-b`: Process all files in the root of the `process/` directory. ```./xrpl-encoder -b```
 - `-h`: Show the help message. ```./xrpl-encoder -h```
 
 
