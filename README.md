@@ -1,6 +1,7 @@
-![Go Report Card](https://goreportcard.com/badge/github.com/xyield/xrpl-go)
+![example workflow](https://github.com/xyield/xrpl-encoder/actions/workflows/go.yml/badge.svg)
+![Go Report Card](https://goreportcard.com/badge/github.com/xyield/xrpl-encoder)
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/xyield/xrpl-encoder)
-![GitHub](https://img.shields.io/github/license/xyield/xrpl-go)
+![GitHub](https://img.shields.io/github/license/xyield/xrpl-encoder)
 # XRPL Encoder
 
 
